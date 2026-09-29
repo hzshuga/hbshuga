@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHUGYLA | Приглашение на день рождения</title>
+  
+  <!-- Шрифты Google Fonts: Cormorant Garamond (Serif/Editorial) и Montserrat (Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================
+       1. КОНФИГУРАЦИЯ И СТИЛИ (TOTAL BLACK & QUIET LUXURY)
+       ========================================== */
+    :root {
+      --bg-color: #070707;
+      --bg-soft: #12100f;
+      --card-bg: rgba(18, 18, 18, 0.88);
+      --accent-burgundy: #58111A;
+      --accent-red: #8B0000;
+      --accent-gold: #d6b57d;
+      --text-main: #F4F4F0;
+      --text-muted: #a4a4a4;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --shadow-soft: 0 25px 80px rgba(0, 0, 0, 0.42);
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top, rgba(94, 29, 33, 0.35), transparent 38%),
+        linear-gradient(180deg, #050505 0%, #080808 48%, #090909 100%);
+      min-height: 100vh;
+      position: relative;
+      color: var(--text-main);
+    }
+
+    /* Эффект шума плёнки (Film Grain Overlay) */
+    .film-grain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.04;
+      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+    }
+
+    /* Сердечки при клике */
+    .click-heart {
+      position: fixed;
+      pointer-events: none;
+      color: var(--accent-burgundy);
+      font-size: 14px;
+      z-index: 9999;
+      animation: floatUpHeart 1.2s ease-out forwards;
+      user-select: none;
+    }
+
+    @keyframes floatUpHeart {
+      0% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      50% {
+        opacity: 0.8;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -80px) scale(1.2);
+      }
+    }
+
+    /* Типографика */
+    h1, h2, h3, .serif-text {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    p {
+      font-weight: 300;
+      line-height: 1.7;
+      color: #D1D1D1;
+      font-size: 0.95rem;
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .btn-editorial {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 14px 28px;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn-editorial:hover {
+      border-color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+      letter-spacing: 4px;
+    }
+
+    /* ==========================================
+       2. ЭКРАН 1: КОНВЕРТ (OVERLAY)
+       ========================================== */
+    #envelope-screen {
+      position: fixed;
+      inset: 0;
+      background-color: #050505;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1.2s cubic-bezier(0.77, 0, 0.175, 1), visibility 1.2s;
+    }
+
+    #envelope-screen.opened {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      background: #0f0f0f;
+      border: 1px solid #222;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      transition: transform 0.8s ease;
+    }
+
+    .envelope-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    }
+
+    .envelope-title {
+      font-size: 1.6rem;
+      letter-spacing: 4px;
+      margin-bottom: 6px;
+    }
+
+    .envelope-sub {
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      color: var(--accent-burgundy);
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    /* ==========================================
+       3. ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ
+       ========================================== */
+    .main-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      opacity: 0;
+      transition: opacity 1.5s ease 0.5s;
+    }
+
+    .main-container.visible {
+      opacity: 1;
+    }
+
+    section {
+      padding: 90px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    /* Анимации появления при скролле */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .fade-in.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding-top: 40px;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 15px;
+      font-weight: 300;
+    }
+
+    .hero-date-time {
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-note {
+      font-style: italic;
+      font-family: var(--font-serif);
+      color: #c7c7c7;
+      font-size: 1.3rem;
+      margin-bottom: 26px;
+      text-transform: none;
+    }
+
+    .invite-link-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(214, 181, 125, 0.28);
+      border-radius: 999px;
+      padding: 10px 16px 10px 18px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .invite-link-box .link-label {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+    }
+
+    .invite-link-box .link-text {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-main);
+      text-transform: lowercase;
+    }
+
+    .copy-link-btn {
+      border: 1px solid rgba(214, 181, 125, 0.45);
+      background: rgba(214, 181, 125, 0.05);
+      color: var(--text-main);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .copy-link-btn:hover {
+      border-color: rgba(214, 181, 125, 0.8);
+      background: rgba(214, 181, 125, 0.12);
+      transform: translateY(-1px);
+    }
+
+    /* Editorial Gallery */
+    .editorial-gallery {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .photo-card {
+      position: relative;
+      background-color: #111;
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      overflow: hidden;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .photo-card:hover {
+      transform: scale(1.02);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(80%) contrast(110%);
+      display: block;
+      transition: filter 0.5s ease;
+    }
+
+    .photo-card:hover img {
+      filter: grayscale(20%) contrast(100%);
+    }
+
+    .photo-card.large {
+      grid-column: span 7;
+      height: 480px;
+    }
+
+    .photo-card.small-1 {
+      grid-column: span 5;
+      height: 320px;
+      margin-top: 40px;
+    }
+
+    .photo-card.small-2 {
+      grid-column: 3 / span 8;
+      height: 380px;
+      margin-top: -20px;
+    }
+
+    .photo-tag {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.6);
+      padding: 4px 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* INVITATION SECTION */
+    .invitation-text {
+      max-width: 650px;
+      margin: 0 auto 50px auto;
+      text-align: center;
+      font-size: 1.05rem;
+      line-height: 1.9;
+    }
+
+    .dress-code-box {
+      border: 1px solid var(--border-color);
+      padding: 30px;
+      text-align: center;
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .dress-code-title {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .dress-code-sub {
+      color: var(--accent-red);
+      letter-spacing: 3px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* WHEN & WHERE */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .info-card {
+      border-left: 1px solid var(--accent-burgundy);
+      padding-left: 25px;
+    }
+
+    .info-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: var(--text-muted);
+    }
+
+    .info-card p {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .location-btn-wrapper {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    /* COUNTDOWN */
+    .countdown-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .time-block {
+      min-width: 70px;
+    }
+
+    .time-val {
+      font-family: var(--font-serif);
+      font-size: 2.8rem;
+      display: block;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .time-lbl {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+
+    /* FORM & RSVP */
+    .form-container {
+      max-width: 550px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 40px;
+      border: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 30px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      color: #CCC;
+    }
+
+    .input-text {
+      width: 100%;
+      background: #080808;
+      border: 1px solid var(--border-color);
+      padding: 14px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .input-text:focus {
+      border-color: var(--text-main);
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #BBB;
+    }
+
+    .radio-label input {
+      margin-right: 12px;
+      accent-color: var(--accent-burgundy);
+      width: 16px;
+      height: 16px;
+    }
+
+    .conditional-input {
+      margin-top: 15px;
+      display: none;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #BBB;
+    }
+
+    .checkbox-label input {
+      margin-right: 12px;
+      accent-color: var(--accent-burgundy);
+      width: 16px;
+      height: 16px;
+    }
+
+    /* WISHLIST */
+    .wishlist-note {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 40px auto;
+    }
+
+    .highlight-no-gifts {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      color: var(--text-main);
+      margin: 20px 0;
+      letter-spacing: 2px;
+    }
+
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .wishlist-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: border-color 0.3s;
+    }
+
+    .wishlist-item:hover {
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .wishlist-item ul {
+      margin-top: 10px;
+      padding-left: 20px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* FOOTER & MUSIC PLAYER */
+    .music-player {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: rgba(18, 18, 18, 0.85);
+      border: 1px solid var(--border-color);
+      padding: 10px 18px;
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-radius: 40px;
+    }
+
+    .music-info {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+    }
+
+    .music-btn {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 80px 0 40px 0;
+    }
+
+    .admin-link {
+      margin-top: 30px;
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: #333;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .admin-link:hover {
+      color: #666;
+    }
+
+    /* МОДАЛЬНОЕ ОКНО АДМИНКИ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 20000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .admin-modal {
+      background: #111;
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 900px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 30px;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .admin-table th, .admin-table td {
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+    }
+
+    .admin-table th {
+      background: #181818;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.4rem;
+      }
+
+      .editorial-gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-card.large,
+      .photo-card.small-1,
+      .photo-card.small-2 {
+        grid-column: span 1;
+        height: 350px;
+        margin-top: 0;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      .form-container {
+        padding: 25px 20px;
+      }
+
+      .music-player {
+        bottom: 15px;
+        right: 15px;
+        left: 15px;
+        justify-content: space-between;
+      }
+
+      .time-val {
+        font-size: 2rem;
+      }
+
+      .countdown-container {
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Film Grain Layer -->
+  <div class="film-grain"></div>
+
+  <!-- Аудио Трек (Lana Del Rey - Brooklyn Baby) -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f2/3c/62/f23c6236-7d20-0318-0c38-71addabb9470/mzaf_5291675828735270159.plus.aac.p.m4a" type="audio/mp4">
+  </audio>
+
+  <!-- ==========================================
+       2. ПЕРВЫЙ ЭКРАН — КОНВЕРТ
+       ========================================== -->
+  <div id="envelope-screen">
+    <div class="envelope-wrapper">
+      <div class="serif-text envelope-title">SHUGYLA</div>
+      <div class="envelope-sub">19TH BIRTHDAY</div>
+      <button class="btn-editorial" id="open-envelope-btn">OPEN THE INVITATION</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       3. ОСНОВНОЙ САЙТ
+       ========================================== -->
+  <div class="main-container" id="main-content">
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <section class="hero fade-in">
+      <span class="subtitle">Personal Invitation</span>
+      <h1 class="hero-title">SHUGYLA’S<br>19TH BIRTHDAY</h1>
+      <div class="hero-date-time" id="hero-date-display">11.10.2026 — 20:00</div>
+      <div class="hero-note">for my favorite people</div>
+
+      <div class="invite-link-box" aria-label="Короткая ссылка приглашения">
+        <span class="link-label">invite</span>
+        <span class="link-text">shuga19bd</span>
+        <button class="copy-link-btn" id="copy-link-btn" type="button">copy</button>
+      </div>
+
+      <!-- EDITORIAL PHOTOGRAPHS GALLERY -->
+      <div class="editorial-gallery">
+        <div class="photo-card large">
+          <img src="assets/655333061_18076190051563197_6379766796624945018_n.jpg" alt="Фотография Шугылы">
+          <div class="photo-tag">CHAPTER 19 — 11.10.26</div>
+        </div>
+        <div class="photo-card small-1">
+          <img src="assets/781053322_18126483121775359_6345968975916995861_n%20(1).jpg" alt="Фотография Шугылы">
+          <div class="photo-tag">NIGHT MOOD</div>
+        </div>
+        <div class="photo-card small-2">
+          <img src="assets/ADILET%20VIBES%20%F0%9F%92%9C%20%23%D3%99%D0%B4%D1%96%D0%BB%D0%B5%D1%82%D0%B6%D0%B0%D1%81%D1%82%D0%B0%D1%80%D1%8B%20%23%D0%B6%D0%B0%D1%81%D1%82%D0%B0%D1%80%D1%88%D1%82%D0%B0%D0%B1%D1%8B.jpg" alt="Фотография Шугылы">
+          <div class="photo-tag">19TH CELEBRATION</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ПРИГЛАШЕНИЕ & DRESS CODE -->
+    <section class="fade-in">
+      <span class="subtitle" style="text-align: center;">The Concept</span>
+      <h2 style="text-align: center; font-size: 2rem; margin-bottom: 30px;">I WANT YOU THERE</h2>
+      
+      <div class="invitation-text">
+        <p>Я приглашаю самых близких мне людей просто собраться вместе, посидеть, отдохнуть, поговорить, посмеяться и хорошо провести вечер.</p>
+        <p style="margin-top: 15px;">Будем у меня дома, поэтому никаких официальностей — просто расслабляемся, отдыхаем, пьём, общаемся и отмечаем мой день рождения вместе.</p>
+        <p style="margin-top: 15px; font-style: italic; color: #FFF;">Мне хочется провести этот вечер именно с вами.</p>
+      </div>
+
+      <div class="dress-code-box">
+        <span class="subtitle">Dress Code</span>
+        <div class="serif-text dress-code-title">TOTAL BLACK</div>
+        <div class="dress-code-sub">BLACK ONLY.</div>
+      </div>
+    </section>
+
+    <!-- 5. ДАТА И ЛОКАЦИЯ -->
+    <section class="fade-in">
+      <div class="info-grid">
+        <div class="info-card">
+          <span class="subtitle">WHEN</span>
+          <p id="info-date-display">11 October 2026</p>
+          <p id="info-time-display">20:00</p>
+        </div>
+        <div class="info-card">
+          <span class="subtitle">WHERE</span>
+          <p style="font-weight: 500;" id="info-place-name">MY HOME</p>
+          <p id="info-address-1">г. Караганда</p>
+          <p id="info-address-2">ул. Нурсултана Назарбаева, 74, кв. 70</p>
+        </div>
+      </div>
+
+      <div class="location-btn-wrapper">
+        <button class="btn-editorial" id="open-map-btn">OPEN LOCATION</button>
+      </div>
+    </section>
+
+    <!-- 6. COUNTDOWN -->
+    <section class="fade-in" style="text-align: center;">
+      <span class="subtitle">Countdown</span>
+      <h2 style="font-size: 1.8rem; margin-bottom: 20px;">UNTIL THE PARTY</h2>
+      
+      <div class="countdown-container" id="countdown">
+        <div class="time-block">
+          <span class="time-val" id="cd-days">00</span>
+          <span class="time-lbl">DAYS</span>
+        </div>
+        <div class="time-block">
+          <span class="time-val" id="cd-hours">00</span>
+          <span class="time-lbl">HOURS</span>
+        </div>
+        <div class="time-block">
+          <span class="time-val" id="cd-minutes">00</span>
+          <span class="time-lbl">MINUTES</span>
+        </div>
+        <div class="time-block">
+          <span class="time-val" id="cd-seconds">00</span>
+          <span class="time-lbl">SECONDS</span>
+        </div>
+      </div>
+      <div id="time-up-message" style="display: none; font-size: 2rem;" class="serif-text">IT’S TIME</div>
+    </section>
+
+    <!-- 7 & 8. RSVP & DRINK PREFERENCES -->
+    <section class="fade-in">
+      <span class="subtitle" style="text-align: center;">Confirmation</span>
+      <h2 style="text-align: center; font-size: 2rem; margin-bottom: 15px;">ARE YOU COMING?</h2>
+      <p style="text-align: center; margin-bottom: 40px; color: var(--text-muted);">Мне нужно знать, кто будет со мной этим вечером.</p>
+
+      <div class="form-container">
+        <form id="rsvp-form">
+          
+          <!-- NAME -->
+          <div class="form-group">
+            <label>YOUR NAME *</label>
+            <input type="text" id="guest-name" class="input-text" required placeholder="Введите ваше имя">
+          </div>
+
+          <!-- WILL BE THERE -->
+          <div class="form-group">
+            <label>WILL YOU BE THERE? *</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="attendance" value="yes" checked> Да, буду
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="attendance" value="no"> К сожалению, не смогу
+              </label>
+            </div>
+          </div>
+
+          <!-- PLUS ONE -->
+          <div class="form-group" id="plus-one-section">
+            <label>WILL YOU COME WITH A +1?</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="plus_one" value="no" checked> Нет
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="plus_one" value="yes"> Да
+              </label>
+            </div>
+
+            <div class="conditional-input" id="plus-one-name-wrapper">
+              <label style="margin-top: 15px;">NAME OF YOUR +1</label>
+              <input type="text" id="plus-one-name" class="input-text" placeholder="Имя вашего +1">
+            </div>
+          </div>
+
+          <!-- DRINK PREFERENCES -->
+          <div class="form-group" id="drinks-section" style="border-top: 1px solid var(--border-color); padding-top: 25px;">
+            <span class="subtitle" style="margin-bottom: 5px;">DRINK PREFERENCES</span>
+            <h3 style="font-size: 1.1rem; margin-bottom: 10px;">WHAT ARE WE DRINKING?</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Напиши, что ты будешь пить, чтобы я могла заранее всё подготовить.</p>
+
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" name="drinks" value="Водка"> Водка
+              </label>
+              
+              <label class="checkbox-label">
+                <input type="checkbox" name="drinks" value="Пиво" id="beer-check"> Пиво
+              </label>
+              <div class="conditional-input" id="beer-type-wrapper">
+                <input type="text" id="beer-type" class="input-text" placeholder="Какое пиво?">
+              </div>
+
+              <label class="checkbox-label">
+                <input type="checkbox" name="drinks" value="Соджу" id="soju-check"> Соджу
+              </label>
+              <div class="conditional-input" id="soju-type-wrapper">
+                <input type="text" id="soju-type" class="input-text" placeholder="Какой вкус?">
+              </div>
+
+              <label class="checkbox-label">
+                <input type="checkbox" name="drinks" value="Другое" id="other-check"> Другое
+              </label>
+              <div class="conditional-input" id="other-type-wrapper">
+                <input type="text" id="other-type" class="input-text" placeholder="Что именно?">
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <div style="text-align: center; margin-top: 30px;">
+            <button type="submit" class="btn-editorial" style="width: 100%;">CONFIRM MY RSVP</button>
+          </div>
+
+        </form>
+
+        <!-- RESPONSE MESSAGE -->
+        <div id="rsvp-response" style="display: none; text-align: center; padding: 20px 0;">
+          <h3 id="response-title" style="font-size: 2rem; margin-bottom: 15px;"></h3>
+          <p id="response-text" style="color: var(--text-muted);"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. WISHLIST -->
+    <section class="fade-in">
+      <span class="subtitle" style="text-align: center;">Wishlist</span>
+      <h2 style="text-align: center; font-size: 2rem;">A LITTLE WISHLIST</h2>
+      
+      <div class="wishlist-note">
+        <p style="font-style: italic; color: var(--text-muted); margin-top: 5px;">Но сначала самое важное.</p>
+        <div class="highlight-no-gifts">ПОДАРКИ НЕ ОБЯЗАТЕЛЬНЫ</div>
+        <p>Мне правда намного важнее ваше присутствие.</p>
+        <p style="margin-top: 10px;">Этот wishlist я сделала только для тех случаев, если вы захотите что-нибудь подарить мне, но не будете знать, что выбрать.</p>
+        <p style="margin-top: 10px;">Вы совершенно не обязаны дарить мне подарки. Можно выбрать что-нибудь из списка, подарить что-то от себя или вообще прийти с пустыми руками. Я буду рада вам в любом случае.</p>
+      </div>
+
+      <!-- ITEM LIST -->
+      <div class="wishlist-grid" id="wishlist-container">
+        <!-- Генерируется автоматически из CONFIG -->
+      </div>
+
+      <p style="text-align: center; font-style: italic; margin-top: 40px; color: #BBB;">
+        «Дарите всё, что захотите. Или не дарите ничего. Я буду рада вам даже с пустыми руками.»
+      </p>
+    </section>
+
+    <!-- 14. ФИНАЛЬНЫЙ ЭКРАН -->
+    <footer class="footer fade-in">
+      <span class="subtitle">Until Then</span>
+      <h2 style="font-size: 2.2rem; margin-bottom: 20px;">SEE YOU ON MY BIRTHDAY</h2>
+      <p style="max-width: 500px; margin: 0 auto 30px auto;">
+        Спасибо, что хочешь провести этот вечер со мной.<br>До встречи 11 октября.
+      </p>
+
+      <div class="serif-text" id="admin-trigger" style="font-size: 1.5rem; letter-spacing: 4px; cursor: pointer;">
+        SHUGYLA
+      </div>
+      <div style="font-size: 0.7rem; letter-spacing: 3px; color: var(--accent-burgundy); margin-top: 5px; font-weight: 600;">
+        19TH BIRTHDAY
+      </div>
+
+      <div style="margin-top: 20px;" id="footer-hearts">♡ ♡ ♡</div>
+    </footer>
+
+  </div>
+
+  <!-- 11. МУЗЫКАЛЬНЫЙ ПЛЕЕР -->
+  <div class="music-player">
+    <div class="music-info">♫ BROOKLYN BABY</div>
+    <button class="music-btn" id="music-toggle-btn">PLAY</button>
+  </div>
+
+  <!-- 15. ПАНЕЛЬ АДМИНИСТРАТОРА (МОДАЛЬНОЕ ОКНО) -->
+  <div class="modal-overlay" id="admin-modal">
+    <div class="admin-modal">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 class="serif-text" style="font-size: 1.4rem;">GUEST RESPONSES (ADMIN)</h3>
+        <button class="btn-editorial" id="close-admin-btn" style="padding: 6px 12px; font-size: 0.6rem;">CLOSE</button>
+      </div>
+
+      <div id="admin-login-view">
+        <p style="margin-bottom: 15px;">Введите пароль администратора:</p>
+        <input type="password" id="admin-password" class="input-text" placeholder="Пароль (по умолчанию 2023)" style="margin-bottom: 15px;">
+        <button class="btn-editorial" id="admin-login-btn">ENTER</button>
+      </div>
+
+      <div id="admin-data-view" style="display: none;">
+        <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+          <button class="btn-editorial" id="clear-data-btn" style="padding: 6px 12px; font-size: 0.6rem; border-color: var(--accent-red);">CLEAR ALL RESPONSES</button>
+          <button class="btn-editorial" id="refresh-admin-btn" style="padding: 6px 12px; font-size: 0.6rem;">REFRESH</button>
+        </div>
+
+        <div id="admin-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px;"></div>
+
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Имя</th>
+                <th>Придёт</th>
+                <th>+1</th>
+                <th>Имя +1</th>
+                <th>Напитки</th>
+                <th>Время</th>
+              </tr>
+            </thead>
+            <tbody id="admin-tbody">
+              <!-- Данные RSVP -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       СКРИПТЫ И ЛОГИКА
+       ========================================== -->
+  <script>
+    /* ==========================================
+       КОНФИГУРАЦИЯ СТАЦИОНАРНЫХ ДАННЫХ
+       ========================================== */
+    const CONFIG = {
+      eventDate: "2026-10-11T20:00:00+05:00", // Время Караганды
+      displayDate: "11 October 2026",
+      displayTime: "20:00",
+      locationName: "MY HOME",
+      addressCity: "г. Караганда",
+      addressStreet: "ул. Нурсултана Назарбаева, 74, кв. 70",
+      mapUrl: "https://yandex.ru/maps/?text=Караганда+Нурсултана+Назарбаева+74",
+      shortUrl: "https://shuga19bd.ru/s/shuga19bd",
+      wishlist: [
+        "1. Букет цветов",
+        "2. Деньги",
+        "3. Мягкая игрушка",
+        "4. Парфюм с запахом ванили",
+        "5. Украшения / бижутерия (кольца, цепочки, браслеты, подвески)",
+        "6. Часы",
+        "7. Ваза",
+        "8. Ночник",
+        "9. Большая мягкая игрушка",
+        "10. Колонка",
+        "11. Халат"
+      ],
+      adminPass: "2023"
+    };
+
+    /* ==========================================
+       1. ИНИЦИАЛИЗАЦИЯ И РЕНДЕР
+       ========================================== */
+    document.addEventListener("DOMContentLoaded", () => {
+      // Рендер Wishlist
+      const wishlistContainer = document.getElementById('wishlist-container');
+      CONFIG.wishlist.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'wishlist-item';
+        div.textContent = item;
+        wishlistContainer.appendChild(div);
+      });
+
+      // Инициализация карты
+      document.getElementById('open-map-btn').addEventListener('click', () => {
+        window.open(CONFIG.mapUrl, '_blank');
+      });
+
+      updateShortLinkLabel();
+
+      // Обратный отсчет
+      startCountdown();
+
+      // Наблюдатель появление секций (Scroll Fade-In)
+      setupScrollAnimations();
+    });
+
+    /* ==========================================
+       2. КОНВЕРТ И МУЗЫКА
+       ========================================== */
+    const envelopeScreen = document.getElementById('envelope-screen');
+    const openEnvelopeBtn = document.getElementById('open-envelope-btn');
+    const mainContent = document.getElementById('main-content');
+    const bgMusic = document.getElementById('bg-music');
+    const musicToggleBtn = document.getElementById('music-toggle-btn');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    let isPlaying = false;
+
+    async function updateShortLinkLabel() {
+      const linkLabel = document.querySelector('.invite-link-box .link-text');
+      if (!linkLabel) return;
+
+      try {
+        const response = await fetch('/api/short-url');
+        const data = await response.json();
+        if (data && data.shortUrl) {
+          const shortValue = new URL(data.shortUrl).pathname.split('/').filter(Boolean).pop() || 'shuga19bd';
+          linkLabel.textContent = shortValue;
+          CONFIG.shortUrl = data.shortUrl;
+        }
+      } catch (error) {
+        linkLabel.textContent = 'shuga19bd';
+      }
+    }
+
+    if (copyLinkBtn) {
+      copyLinkBtn.addEventListener('click', async () => {
+        const textToCopy = CONFIG.shortUrl || 'https://shuga19bd.ru/s/shuga19bd';
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          copyLinkBtn.textContent = 'copied';
+          setTimeout(() => {
+            copyLinkBtn.textContent = 'copy';
+          }, 1200);
+        } catch (error) {
+          const fallback = document.createElement('textarea');
+          fallback.value = textToCopy;
+          document.body.appendChild(fallback);
+          fallback.select();
+          document.execCommand('copy');
+          fallback.remove();
+          copyLinkBtn.textContent = 'copied';
+          setTimeout(() => {
+            copyLinkBtn.textContent = 'copy';
+          }, 1200);
+        }
+      });
+    }
+
+    openEnvelopeBtn.addEventListener('click', () => {
+      envelopeScreen.classList.add('opened');
+      mainContent.classList.add('visible');
+      
+      // Попытка автовоспроизведения музыки после клика
+      bgMusic.play().then(() => {
+        isPlaying = true;
+        musicToggleBtn.textContent = 'PAUSE';
+      }).catch(err => {
+        console.log("Autoplay blocked:", err);
+      });
+    });
+
+    musicToggleBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        bgMusic.pause();
+        musicToggleBtn.textContent = 'PLAY';
+        isPlaying = false;
+      } else {
+        bgMusic.play();
+        musicToggleBtn.textContent = 'PAUSE';
+        isPlaying = true;
+      }
+    });
+
+    /* ==========================================
+       3. АНИМАЦИЯ СЕРДЕЧЕК ПРИ КЛИКЕ
+       ========================================== */
+    document.addEventListener('click', (e) => {
+      // Не спамить сердечками при клике на элементы ввода
+      if (['INPUT', 'BUTTON', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+      const heart = document.createElement('div');
+      heart.className = 'click-heart';
+      heart.innerHTML = '♡';
+      heart.style.left = `${e.clientX}px`;
+      heart.style.top = `${e.clientY}px`;
+      
+      document.body.appendChild(heart);
+      
+      setTimeout(() => {
+        heart.remove();
+      }, 1200);
+    });
+
+    /* ==========================================
+       4. COUNTDOWN TIMER
+       ========================================== */
+    function startCountdown() {
+      const targetTime = new Date(CONFIG.eventDate).getTime();
+
+      const timerInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const diff = targetTime - now;
+
+        if (diff <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('countdown').style.display = 'none';
+          document.getElementById('time-up-message').style.display = 'block';
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+        document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+      }, 1000);
+    }
+
+    /* ==========================================
+       5. ФОРМА RSVP & ДИНАМИЧЕСКИЕ ПОЛЯ
+       ========================================== */
+    const rsvpForm = document.getElementById('rsvp-form');
+    const attendanceRadios = document.getElementsByName('attendance');
+    const plusOneRadios = document.getElementsByName('plus_one');
+    const plusOneSection = document.getElementById('plus-one-section');
+    const plusOneNameWrapper = document.getElementById('plus-one-name-wrapper');
+    const drinksSection = document.getElementById('drinks-section');
+
+    // Напитки чекбоксы
+    const beerCheck = document.getElementById('beer-check');
+    const beerTypeWrapper = document.getElementById('beer-type-wrapper');
+    const sojuCheck = document.getElementById('soju-check');
+    const sojuTypeWrapper = document.getElementById('soju-type-wrapper');
+    const otherCheck = document.getElementById('other-check');
+    const otherTypeWrapper = document.getElementById('other-type-wrapper');
+
+    // Обработка скрытия блоков если человек не придет
+    Array.from(attendanceRadios).forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === 'no') {
+          plusOneSection.style.display = 'none';
+          drinksSection.style.display = 'none';
+        } else {
+          plusOneSection.style.display = 'block';
+          drinksSection.style.display = 'block';
+        }
+      });
+    });
+
+    // Обработка +1
+    Array.from(plusOneRadios).forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === 'yes') {
+          plusOneNameWrapper.style.display = 'block';
+        } else {
+          plusOneNameWrapper.style.display = 'none';
+        }
+      });
+    });
+
+    // Показ доп. полей для напитков
+    beerCheck.addEventListener('change', (e) => {
+      beerTypeWrapper.style.display = e.target.checked ? 'block' : 'none';
+    });
+    sojuCheck.addEventListener('change', (e) => {
+      sojuTypeWrapper.style.display = e.target.checked ? 'block' : 'none';
+    });
+    otherCheck.addEventListener('change', (e) => {
+      otherTypeWrapper.style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // Отправка формы на real backend
+    rsvpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('guest-name').value.trim();
+      const attendance = document.querySelector('input[name="attendance"]:checked').value;
+      const isAttending = attendance === 'yes';
+
+      let plusOne = 'no';
+      let plusOneName = '';
+      let drinks = [];
+
+      if (isAttending) {
+        const hasPlusOne = document.querySelector('input[name="plus_one"]:checked').value === 'yes';
+        plusOne = hasPlusOne ? 'yes' : 'no';
+        if (hasPlusOne) {
+          plusOneName = document.getElementById('plus-one-name').value.trim() || 'Не указано';
+        }
+
+        const checkedDrinks = document.querySelectorAll('input[name="drinks"]:checked');
+        checkedDrinks.forEach(chk => {
+          let val = chk.value;
+          if (val === 'Пиво') {
+            const bType = document.getElementById('beer-type').value.trim();
+            if (bType) val += ` (${bType})`;
+          } else if (val === 'Соджу') {
+            const sType = document.getElementById('soju-type').value.trim();
+            if (sType) val += ` (${sType})`;
+          } else if (val === 'Другое') {
+            const oType = document.getElementById('other-type').value.trim();
+            if (oType) val += ` (${oType})`;
+          }
+          drinks.push(val);
+        });
+      }
+
+      try {
+        const response = await fetch('/api/rsvp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            attendance: isAttending ? 'yes' : 'no',
+            plusOne,
+            plusOneName,
+            drinks
+          })
+        });
+
+        const result = await response.json();
+        if (!response.ok || result.ok === false) {
+          throw new Error(result.message || 'Не удалось сохранить ответ');
+        }
+
+        rsvpForm.style.display = 'none';
+        const rsvpResponse = document.getElementById('rsvp-response');
+        const responseTitle = document.getElementById('response-title');
+        const responseText = document.getElementById('response-text');
+
+        if (isAttending) {
+          responseTitle.textContent = 'SEE YOU THERE';
+          responseText.textContent = 'Буду ждать тебя 11 октября в 20:00.';
+        } else {
+          responseTitle.textContent = 'I’LL MISS YOU';
+          responseText.textContent = 'Жаль, что тебя не будет. Спасибо, что сообщил(а).';
+        }
+
+        rsvpResponse.style.display = 'block';
+      } catch (error) {
+        alert(error.message || 'Не удалось отправить RSVP');
+      }
+    });
+
+    /* ==========================================
+       6. ПАНЕЛЬ АДМИНИСТРАТОРА (LOCALSTORAGE READ)
+       ========================================== */
+    const adminTrigger = document.getElementById('admin-trigger');
+    const adminModal = document.getElementById('admin-modal');
+    const closeAdminBtn = document.getElementById('close-admin-btn');
+    const adminLoginBtn = document.getElementById('admin-login-btn');
+    const adminPasswordInput = document.getElementById('admin-password');
+    const adminLoginView = document.getElementById('admin-login-view');
+    const adminDataView = document.getElementById('admin-data-view');
+    const adminTbody = document.getElementById('admin-tbody');
+    const adminSummary = document.getElementById('admin-summary');
+    const clearDataBtn = document.getElementById('clear-data-btn');
+    const refreshAdminBtn = document.getElementById('refresh-admin-btn');
+
+    let adminToken = sessionStorage.getItem('shugyla_admin_token') || '';
+
+    adminTrigger.addEventListener('click', () => {
+      adminModal.classList.add('active');
+      adminPasswordInput.focus();
+    });
+
+    closeAdminBtn.addEventListener('click', () => {
+      adminModal.classList.remove('active');
+      adminPasswordInput.value = '';
+      adminLoginView.style.display = 'block';
+      adminDataView.style.display = 'none';
+    });
+
+    adminPasswordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        openAdminPanel();
+      }
+    });
+
+    adminLoginBtn.addEventListener('click', openAdminPanel);
+
+    async function openAdminPanel() {
+      const password = adminPasswordInput.value.trim();
+
+      try {
+        const response = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+
+        const result = await response.json();
+        if (!response.ok || result.ok === false) {
+          throw new Error(result.message || 'Неверный пароль');
+        }
+
+        adminToken = result.token;
+        sessionStorage.setItem('shugyla_admin_token', adminToken);
+        adminLoginView.style.display = 'none';
+        adminDataView.style.display = 'block';
+        await loadAdminData();
+      } catch (error) {
+        alert(error.message || 'Ошибка входа');
+      }
+    }
+
+    async function loadAdminData() {
+      if (!adminToken) {
+        adminTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#777;">Войдите в админку</td></tr>';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/admin/responses', {
+          headers: {
+            'Authorization': `Bearer ${adminToken}`
+          }
+        });
+
+        const result = await response.json();
+        if (!response.ok || result.ok === false) {
+          throw new Error(result.message || 'Не удалось получить данные');
+        }
+
+        const data = Array.isArray(result.data) ? result.data : [];
+
+        adminTbody.innerHTML = '';
+        renderAdminSummary(data);
+
+        if (data.length === 0) {
+          adminTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#777;">Ответов пока нет</td></tr>';
+          return;
+        }
+
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${escapeHtml(row.name || '—')}</td>
+            <td>${escapeHtml(row.attendance === 'yes' ? 'Придёт' : 'Не придёт')}</td>
+            <td>${escapeHtml(row.plusOne === 'yes' ? 'Да' : 'Нет')}</td>
+            <td>${escapeHtml(row.plusOneName || '—')}</td>
+            <td>${escapeHtml(row.drinks || '—')}</td>
+            <td style="font-size:0.7rem; color:#777;">${escapeHtml(row.timestamp || '—')}</td>
+          `;
+          adminTbody.appendChild(tr);
+        });
+      } catch (error) {
+        alert(error.message || 'Ошибка загрузки данных');
+      }
+    }
+
+    function renderAdminSummary(data) {
+      const total = data.length;
+      const coming = data.filter(item => String(item.attendance).toLowerCase() === 'yes').length;
+      const notComing = data.filter(item => String(item.attendance).toLowerCase() === 'no').length;
+      const plusOnes = data.filter(item => String(item.plusOne).toLowerCase() === 'yes').length;
+
+      const cards = [
+        { label: 'Всего', value: total },
+        { label: 'Придут', value: coming },
+        { label: 'Не придут', value: notComing },
+        { label: '+1', value: plusOnes }
+      ];
+
+      adminSummary.innerHTML = cards.map(card => `
+        <div style="padding: 14px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px;">
+          <div style="font-size: 0.64rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted);">${card.label}</div>
+          <div style="font-size: 1.8rem; font-family: var(--font-serif); margin-top: 8px;">${card.value}</div>
+        </div>
+      `).join('');
+    }
+
+    clearDataBtn.addEventListener('click', async () => {
+      if (!confirm('Удалить все ответы гостей?')) return;
+
+      try {
+        const response = await fetch('/api/admin/clear', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${adminToken}`
+          }
+        });
+
+        const result = await response.json();
+        if (!response.ok || result.ok === false) {
+          throw new Error(result.message || 'Не удалось очистить ответы');
+        }
+
+        await loadAdminData();
+      } catch (error) {
+        alert(error.message || 'Ошибка очистки');
+      }
+    });
+
+    refreshAdminBtn.addEventListener('click', () => {
+      loadAdminData();
+    });
+
+    function escapeHtml(text) {
+      return String(text || '').replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    /* ==========================================
+       7. SCROLL FADE-IN OBSERVER
+       ========================================== */
+    function setupScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }
+  </script>
+</body>
+</html>
